@@ -172,7 +172,7 @@ else if(MV<.03||ch.every(c=>c.out.gain.value==0))m=['No sound. Check MUTE, SOLO,
 if(m){say(m[0],m[1]);flag=1}else if(flag){say('Sounding fine.','g');flag=0}}
 const MS=[{t:'The drums are too quiet. Turn DRUMS GAIN up until the meter is green and yellow, not red.',h:'Drag the top knob on DRUMS up slowly. Watch the meter.',s(){sv(0,'gain',.2)},ok:()=>{const p=nm(ch[0].pk);return p>.6&&p<.93}},
 {t:'Pan the KEYS to the left.',h:'Find PAN on KEYS. Drag it down to turn it left.',s(){},ok:()=>ch[2].v.pan<.3},
-{t:'Mute everything except the drums.',h:'Press MUTE on every channel except DRUMS.',s(){clr()},ok:()=>ch.slice(0,5).every((c,i)=>i?c.mute:!c.mute)},
+{t:'Mute everything except the drums.',h:'Press MUTE on every channel except DRUMS.',s(){clr()},ok:()=>ch.every((c,i)=>i?c.mute:!c.mute)},
 {t:'This mix is muddy. Cut LOW on BASS, KEYS and VOCAL.',h:'Turn the LOW knob on those three channels down.',s(){clr();[1,2,3].forEach(i=>sv(i,'lo',.9))},ok:()=>[1,2,3].every(i=>ch[i].v.lo<.55)},
 {t:'The mic is squealing! Stop it without muting.',h:'Lower the MIC fader, cut its HIGH, or press AIM MIC to point it away.',s(){clr();sv(4,'fad',.9);sv(4,'gain',.6);near=1;aim()},ok:()=>!FB&&fb<.05&&!ch[4].mute&&ch[4].v.fad>.3},
 {t:'Cables! Connect MIC to CH5 IN, KEYS to CH3 IN, MAIN OUT to SPEAKERS, and SUB OUT to SUB.',h:'Tap the cable name, then tap where it goes. An input goes IN to the mixer. The mix goes OUT to the speakers.',s(){cab={};pend=null;applyCab();$('#cab').hidden=false;cabUI()},ok:()=>cabOK()}];

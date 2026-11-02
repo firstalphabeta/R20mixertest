@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MixLab – Learn the Mixer</title>
+<style>
+*{box-sizing:border-box;margin:0}
+:root{--tx:#e6e8eb;--mu:#8a9099;--g:#4ade80;--y:#facc15;--r:#f87171;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:#1a7cf0;font:14px/1.4 system-ui,sans-serif;color:var(--tx);min-height:100vh}
+.desk{background:linear-gradient(#2c2f34,#1a1c20);border-radius:10px;margin:8px;padding:8px;box-shadow:0 10px 30px #0009}
+.top{display:flex;flex-wrap:wrap;gap:8px}
+.logo{flex:1 1 100%;display:flex;justify-content:space-between;align-items:center;font:700 16px system-ui}
+.logo small{color:var(--mu);font-weight:500}
+.screen,.mis{flex:1 1 230px;background:#06080a;border:2px solid #34383e;border-radius:6px;padding:8px;min-height:92px;font-size:13px}
+.screen small,.mis small{color:#38bdf8;font:700 10px system-ui;letter-spacing:.08em}
+#msg{margin-top:4px;font-size:14px;font-weight:600}
+.g{color:var(--g)}.y{color:var(--y)}.r{color:var(--r)}
+.mis button,.logo button{background:#2a2f36;color:var(--tx);border:1px solid #444;border-radius:4px;padding:5px 10px;margin:6px 6px 0 0;font:600 12px system-ui}
+#mh{color:var(--y);margin-top:4px}
+.row{display:flex;gap:6px;margin-top:8px}
+.strips{display:flex;gap:4px;overflow-x:auto;flex:1}
+.st{flex:0 0 76px;background:#202328;border-radius:4px;padding:5px 4px;display:flex;flex-direction:column;align-items:center;gap:7px}
+.tab{width:100%;text-align:center;font:700 10px/1.25 system-ui;color:#06202f;border-radius:3px;padding:3px 0}
+.k{display:flex;flex-direction:column;align-items:center;font:600 8px system-ui;color:var(--mu);touch-action:none;cursor:ns-resize;user-select:none}
+.dial{width:32px;height:32px;border-radius:50%;background:radial-gradient(#50555d,#15171a);border:2px solid #0a84ff66;position:relative;margin-bottom:1px}
+.dial i{position:absolute;left:50%;top:2px;width:2px;height:12px;margin-left:-1px;background:#38bdf8;border-radius:1px}
+.bt{display:flex;gap:3px;width:100%}
+button{cursor:pointer}
+.bt button,.aim{flex:1;font:700 8px system-ui;padding:6px 0;border:0;border-radius:3px;color:#111;opacity:.5;width:100%}
+.so{background:#f2b27c}.mu{background:#f27c7c}.aim{background:#7cc4f2}
+.bt .on,.aim.on{opacity:1;box-shadow:0 0 8px currentColor}
+.mf{display:flex;gap:6px;height:160px}
+.mtr{width:10px;display:flex;flex-direction:column-reverse;gap:1px}
+.mtr b{flex:1;background:#2b2f35;border-radius:1px}
+.mtr .on0{background:var(--g)}.mtr .on1{background:var(--y)}.mtr .on2{background:var(--r)}
+.fd{width:26px;height:160px;position:relative;touch-action:none;background:linear-gradient(90deg,transparent 11px,#000 11px,#000 15px,transparent 15px)}
+.cap{position:absolute;left:0;width:26px;height:22px;background:linear-gradient(#8a8a8a,#333);border-radius:2px;border-top:2px solid #ccc}
+.info{position:sticky;bottom:8px;margin:8px;background:#0b0d10f2;border:1px solid #38bdf8;border-radius:8px;padding:10px}
+#ov{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;padding:20px;z-index:9}
+#ov div{background:#1b1d21;border-radius:12px;padding:22px;max-width:340px;text-align:center}
+#ov h2{margin-bottom:8px}#go{margin-top:14px;background:#0a84ff;color:#fff;border:0;border-radius:8px;padding:12px 22px;font:700 16px system-ui}
+.se{width:100%;background:#7cc4f2;border:0;border-radius:3px;color:#111;font:700 8px system-ui;padding:6px 0;opacity:.5}.se.on{opacity:1;box-shadow:0 0 8px #7cc4f2}
+.fd{background:linear-gradient(90deg,transparent 11px,#000 11px,#000 15px,transparent 15px),repeating-linear-gradient(#0000 0 12px,#777 12px 13px);background-size:100% 100%,6px 100%;background-repeat:no-repeat;background-position:0 0,right 0}
+#cab{background:#101317;border:1px solid #38bdf8;border-radius:6px;padding:8px;margin-top:8px;font-size:13px}#cab[hidden]{display:none}
+#cab button{background:#2a2f36;color:var(--tx);border:1px solid #555;border-radius:4px;padding:6px 10px;margin:4px 4px 0 0;font:600 12px system-ui}#cab button.on{background:#0a84ff}
+@media(max-width:600px){
+body{font-size:15px}
+.desk{margin:0;padding:8px;border-radius:0}
+.logo{align-items:flex-start;gap:6px}
+.logo>span:last-child{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.logo button{flex:1 1 calc(50% - 6px);min-height:42px;margin:0;font-size:13px}
+.screen,.mis{flex-basis:100%;min-height:0;padding:10px}
+#msg{font-size:15px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overflow:visible}
+.strips{grid-column:1/-1;width:100%;min-width:0;overscroll-behavior-x:contain;scrollbar-width:thin}
+#MS,#SS{width:100%}
+.row #MS>div:nth-child(2),.row #SS>div:nth-child(2){height:18px!important}
+.st{flex-basis:82px;padding:7px 5px;gap:8px}
+.tab{min-height:32px;font-size:11px}
+.k{font-size:10px}
+.dial{width:40px;height:40px}
+.dial i{height:15px}
+.se,.bt button,.aim{min-height:36px;font-size:10px}
+.bt{gap:5px}
+.fd{width:36px;background-image:linear-gradient(90deg,transparent 16px,#000 16px,#000 20px,transparent 20px),repeating-linear-gradient(#0000 0 12px,#777 12px 13px)}
+.cap{width:36px}
+.info{position:static;bottom:auto;font-size:14px}
+#ov div{width:min(340px,100%)}
+#go{min-height:48px;width:min(240px,100%)}
+#cab button{min-height:40px}
+}
+</style></head><body>
+<div id="ov"><div><h2>Welcome to MixLab</h2><p>Use headphones and keep your volume low. Then tap start. Turn knobs and see what really happens to the sound.</p><button id="go">Start the mixer</button></div></div>
+<div class="desk">
+<div class="top">
+<div class="logo"><span>MIXLAB <small>SE-5 practice desk</small></span><span><button id="cb">🔌 Connect it</button><button id="rm">🎤 Real mic</button><button id="ld">📂 My audio</button><input type="file" id="fi" accept="audio/*" hidden><button id="pl">⏯ Music</button></span></div>
+<div class="screen"><small>WHAT’S HAPPENING?</small><div id="msg" class="g">Touch any knob to learn.</div><small id="sel"></small><canvas id="eq" width="300" height="70" style="width:100%;height:70px;display:block"></canvas></div>
+<div class="mis"><small>MISSIONS</small><div id="mt"></div><div id="mh"></div><button id="hb">Hint</button><button id="sk">Skip</button></div>
+</div>
+<div id="cab" hidden><b>Connect it.</b> Tap a cable, then tap where it goes.<div id="cs"></div><div id="ct"></div><div id="cl"></div><button id="cu">Unplug all</button><button id="cf">Show me</button></div><div class="row"><div class="strips" id="S"></div><div class="st" id="MS"></div></div>
+</div>
+<div class="info" id="info">Touch or hover any knob, fader or button. A short help card shows up here.</div>
+<script>
+const $=s=>document.querySelector(s),dB=d=>Math.pow(10,d/20),cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const fad=v=>v<.03?0:dB((v-.75)*48),nm=p=>cl(1+Math.log10(Math.max(p,1e-4))/2.4);
+const N=['DRUMS','BASS','KEYS','VOCAL','MIC','FILE'];
+const T={gain:['GAIN','Sets how strong the sound is coming IN. Watch the meter.','Stronger, clearer sound.','Too high = harsh, broken sound (distortion). Too low = weak and hissy.'],
+hi:['HIGH (treble)','Turns the bright, airy sounds up or down.','Bright, crisp sound.','Too much = sharp and tiring. On a mic it can start feedback.'],
+mid:['MID','Turns the middle sounds up or down. Voices live here.','Voices and instruments come forward.','Too much = honky and nasal.'],
+lo:['LOW (bass)','Turns the deep, boomy sounds up or down.','Warm, strong sound.','Too much on every channel = muddy and boomy.'],
+pan:['PAN','Moves the sound left or right in your headphones.','Gives each sound its own space.','Everything hard left or right feels unbalanced.'],
+fad:['FADER','Sets how loud this channel is in the mix.','Easy to balance one sound against the others.','Too high = too loud. A loud mic = feedback.'],
+solo:['SOLO','Lets you hear only this channel.','Great for checking one sound.','If you forget it is on, the mix seems broken.'],
+mute:['MUTE','Switches this channel off.','Quick way to silence noise or a squeal.','A muted channel is silent. Check it if sound is missing.'],
+main:['MAIN FADER','Sets the final volume of the whole mix.','One control for the total level.','Too high = the whole mix clips and distorts.'],
+aim:['AIM MIC','Pretend the mic points at the speaker in the room.','Shows how a real stage works.','Mic near the speaker + loud = FEEDBACK, a loud howl.']};
+const R={gain:['Gain is low. Sound is weak and hissy.|y','Gain is good. Clean and clear.|g','Gain is very high. Sound may break up!|r'],
+hi:['HIGH is cut. Darker, softer sound.|g','HIGH is balanced.|g','HIGH is up. Brighter, but getting sharp.|y'],
+mid:['MID is cut. Sound is hollow.|y','MID is balanced.|g','MID is up. Pushed forward, can sound honky.|y'],
+lo:['LOW is cut. Thinner, cleaner sound.|g','LOW is balanced.|g','LOW is up. Warmer, but getting muddy.|y'],
+pan:['Panned left.|g','Centered.|g','Panned right.|g'],
+fad:['Fader is low. Quiet in the mix.|y','Level is good.|g','Fader is high. Loud! Watch the meter.|y'],
+main:['MAIN is low. The whole mix is quiet.|y','MAIN is good.|g','MAIN is high. The whole mix may clip!|r']};
+let C,NB,M={pk:0,cl:0},MV=.75,near=0,fb=0,fbT=0,FB=0,run=1,step=0,next=0,flag=0,last=0,tm=0,mi=0,okc=0;
+const ch=N.map(()=>({v:{gain:.5,hi:.5,mid:.5,lo:.5,pan:.5,fad:.7},mute:0,solo:0,pk:0,cl:0,p:{},b:{}}));
+function say(t,c){$('#msg').textContent=t;$('#msg').className=c}
+function react(k,v){const a=R[k][v<.25?0:v>.75?2:1].split('|');say(a[0],a[1])}
+function apply(i){if(!C)return;const c=ch[i],v=c.v,s=ch.some(x=>x.solo);
+c.trim.gain.value=dB((v.gain-.5)*50);c.lo.gain.value=(v.lo-.5)*30;c.mid.gain.value=(v.mid-.5)*30;c.hi.gain.value=(v.hi-.5)*30;c.pan.pan.value=(v.pan-.5)*2;
+c.out.gain.value=(!c.mute&&(!s||c.solo))?fad(v.fad):0}
+const applyAll=()=>ch.forEach((_,i)=>apply(i));
+function sv(i,k,v){ch[i].v[k]=v;ch[i].p[k]();apply(i)}
+function clr(){ch.forEach(c=>{c.mute=c.solo=0;c.b.mute.classList.remove('on');c.b.solo.classList.remove('on')});applyAll()}
+function aim(){$('.aim').classList.toggle('on',!!near)}
+function mkKnob(p,lbl,k,i){const e=document.createElement('div'),c=ch[i];e.className='k';e.dataset.t=k;e.innerHTML=`<div class="dial"><i></i></div>${lbl}`;p.append(e);
+const d=e.firstChild,paint=()=>d.style.transform=`rotate(${(c.v[k]-.5)*270}deg)`;c.p[k]=paint;paint();let y0=null,v0=0;
+e.onpointerdown=ev=>{e.setPointerCapture(ev.pointerId);y0=ev.clientY;v0=c.v[k]};
+e.onpointermove=ev=>{if(y0===null)return;c.v[k]=cl(v0+(y0-ev.clientY)/140);paint();apply(i);react(k,c.v[k])};
+e.onpointerup=()=>y0=null;e.ondblclick=()=>{c.v[k]=.5;paint();apply(i);react(k,.5)}}
+function mkFader(fd,get,set){const cap=fd.firstChild,paint=()=>cap.style.bottom=get()*138+'px';paint();let on=0;
+const mv=ev=>{const r=fd.getBoundingClientRect();set(cl(1-(ev.clientY-r.top-11)/(r.height-22)));paint()};
+fd.onpointerdown=ev=>{on=1;fd.setPointerCapture(ev.pointerId);mv(ev)};fd.onpointermove=ev=>on&&mv(ev);fd.onpointerup=()=>on=0;return paint}
+const MT='<b></b>'.repeat(14);
+N.forEach((n,i)=>{const c=ch[i],s=document.createElement('div');s.className='st';
+s.innerHTML=`<div class="tab" style="background:${i==4?'#f2b27c':'#7cc4f2'}">${i+1}<br>${n}</div><div class="kn"></div><button class="se" data-t="sel">SELECT</button><div class="bt"><button class="so" data-t="solo">SOLO</button><button class="mu" data-t="mute">MUTE</button></div><div class="mf"><div class="mtr">${MT}</div><div class="fd" data-t="fad"><div class="cap"></div></div></div>${i==4?'<button class="aim" data-t="aim">AIM MIC</button>':'<div style="height:22px"></div>'}`;
+$('#S').append(s);const kn=s.querySelector('.kn');kn.style.cssText='display:flex;flex-direction:column;gap:6px;align-items:center';
+[['gain','GAIN'],['hi','HIGH'],['mid','MID'],['lo','LOW'],['pan','PAN']].forEach(([k,l])=>mkKnob(kn,l,k,i));
+c.mtr=s.querySelector('.mtr');c.se=s.querySelector('.se');c.se.onclick=()=>sel=i;c.p.fad=mkFader(s.querySelector('.fd'),()=>c.v.fad,v=>{c.v.fad=v;apply(i);react('fad',v)});
+['solo','mute'].forEach(k=>{const b=s.querySelector('.'+(k=='solo'?'so':'mu'));c.b[k]=b;b.onclick=()=>{c[k]^=1;b.classList.toggle('on',!!c[k]);applyAll();say(k=='solo'?(c[k]?N[i]+' solo: you only hear this.':'Solo off.'):(c[k]?N[i]+' is muted. No sound from it.':N[i]+' is back on.'),c[k]?'y':'g')}});
+if(i==4)s.querySelector('.aim').onclick=()=>{near^=1;aim();say(near?'The mic points at the speaker. Be careful with volume!':'The mic points away. Safe.',near?'y':'g')}});
+$('#MS').innerHTML=`<div class="tab" style="background:#f27c7c">MAIN</div><div style="height:249px"></div><div class="mf"><div class="mtr">${MT}</div><div class="fd" data-t="main"><div class="cap"></div></div></div><div style="height:22px"></div>`;
+M.mtr=$('#MS .mtr');mkFader($('#MS .fd'),()=>MV,v=>{MV=v;if(C)M.g.gain.value=fad(v);react('main',v)});
+['pointerover','pointerdown'].forEach(ev=>document.addEventListener(ev,e=>{const t=e.target.closest&&e.target.closest('[data-t]');if(!t)return;const d=T[t.dataset.t];$('#info').innerHTML=`<b>${d[0]}</b>: ${d[1]}<br><span class="g">Good:</span> ${d[2]}<br><span class="y">Careful:</span> ${d[3]}`}));
+const cv=f=>{const a=new Float32Array(1025);for(let i=0;i<1025;i++)a[i]=f(i/512-1);return a};
+function init(){C=new(window.AudioContext||window.webkitAudioContext)();NB=C.createBuffer(1,C.sampleRate,C.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+M.in=C.createGain();M.g=C.createGain();M.g.gain.value=fad(MV);M.sh=C.createWaveShaper();M.sh.curve=cv(x=>x);M.an=C.createAnalyser();M.an.fftSize=256;M.sf=C.createGain();M.sf.gain.value=.4;
+const th=C.createBiquadFilter();th.type='highpass';th.frequency.value=90;M.in.connect(th).connect(M.g).connect(M.sh);const sl=C.createBiquadFilter();sl.type='lowpass';sl.frequency.value=100;S.g=C.createGain();S.g.gain.value=fad(SV);S.sh=C.createWaveShaper();S.sh.curve=cv(x=>x);S.an=C.createAnalyser();S.an.fftSize=256;S.sf=C.createGain();S.sf.gain.value=.5;M.in.connect(sl).connect(S.g).connect(S.sh);S.sh.connect(S.an);S.an.connect(S.sf).connect(C.destination);M.sh.connect(M.an);M.an.connect(M.sf).connect(C.destination);
+M.fo=C.createOscillator();M.fo.frequency.value=2800;M.fg=C.createGain();M.fg.gain.value=0;M.fo.connect(M.fg).connect(M.sf);M.fo.start();
+ch.forEach((c,i)=>{c.in=C.createGain();c.trim=C.createGain();c.sh=C.createWaveShaper();c.sh.curve=cv(x=>Math.tanh(1.5*x)/1.2);
+c.lo=C.createBiquadFilter();c.lo.type='lowshelf';c.lo.frequency.value=120;c.mid=C.createBiquadFilter();c.mid.type='peaking';c.mid.frequency.value=1500;c.mid.Q.value=.8;
+c.hi=C.createBiquadFilter();c.hi.type='highshelf';c.hi.frequency.value=5000;c.pan=C.createStereoPanner();c.out=C.createGain();c.an=C.createAnalyser();c.an.fftSize=256;
+c.in.connect(c.trim).connect(c.sh);const nz=C.createBufferSource();nz.buffer=NB;nz.loop=true;const ng=C.createGain();ng.gain.value=.0015;nz.connect(ng).connect(c.sh);nz.start();
+c.sh.connect(c.lo).connect(c.mid).connect(c.hi).connect(c.pan).connect(c.out);c.out.connect(c.an);c.out.connect(M.in)});
+const rt=C.createBufferSource(),bp=C.createBiquadFilter(),rg=C.createGain();rt.buffer=NB;rt.loop=true;bp.type='bandpass';bp.frequency.value=1200;bp.Q.value=.5;rg.gain.value=.03;rt.connect(bp).connect(rg).connect(ch[4].in);rt.start();
+applyAll();applyCab();next=C.currentTime+.1;setInterval(sched,25);requestAnimationFrame(loop)}
+const env=(g,t,a,d,pk)=>{g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+a);g.gain.exponentialRampToValueAtTime(.001,t+a+d)};
+function osc(type,f,t,dur,pk,dest,fl){const o=C.createOscillator(),g=C.createGain();o.type=type;o.frequency.value=f;env(g,t,.02,dur,pk);let n=o;if(fl){n=C.createBiquadFilter();n.type=fl[0];n.frequency.value=fl[1];n.Q.value=fl[2]||1;o.connect(n)}n.connect(g).connect(dest);o.start(t);o.stop(t+dur+.1)}
+function nse(t,dur,pk,f,dest){const s=C.createBufferSource(),h=C.createBiquadFilter(),g=C.createGain();s.buffer=NB;h.type='highpass';h.frequency.value=f;env(g,t,.002,dur,pk);s.connect(h).connect(g).connect(dest);s.start(t);s.stop(t+dur+.05)}
+function play(s,t){const q=s%16,r=s>>4,I=ch.map(c=>c.in);
+if([0,6,8,11].includes(q)){const o=C.createOscillator(),g=C.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(45,t+.15);env(g,t,.003,.28,.9);o.connect(g).connect(I[0]);o.start(t);o.stop(t+.4)}
+if(q==4||q==12)nse(t,.15,.5,1500,I[0]);if(s%2==0)nse(t,.04,.18,7000,I[0]);
+if([0,3,6,8,11,14].includes(q))osc('sawtooth',[55,43.65][r],t,.28,.5,I[1],['lowpass',500]);
+if(q==0)(r?[174.6,220,261.6]:[220,261.6,329.6]).forEach(f=>osc('triangle',f,t,2.4,.18,I[2]));
+if(q%4==0)osc('sawtooth',[[440,523,494,440],[392,440,349,392]][r][q/4],t,.5,.25,I[3],['bandpass',900,3])}
+function sched(){while(next<C.currentTime+.15){if(run)play(step,next);next+=.15;step=(step+1)%32}}
+function lit(el,p){const n=p<.001?0:Math.round(nm(p)*14);[...el.children].forEach((b,i)=>b.className=i<n?'on'+(i>=13?2:i>=11?1:0):'')}
+const buf=new Uint8Array(256),pk=a=>{a.getByteTimeDomainData(buf);let p=0;for(const b of buf)p=Math.max(p,Math.abs(b-128)/128);return p};
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.1,(now-last)/1000);last=now;const pn=performance.now();
+ch.forEach(c=>{const p=pk(c.an);c.pk=Math.max(p,c.pk*.96);if(p>.98)c.cl=pn;lit(c.mtr,c.pk)});
+const p=pk(M.an);M.pk=Math.max(p,M.pk*.96);if(p>.98)M.cl=pn;lit(M.mtr,M.pk);const ps=pk(S.an);S.pk=Math.max(ps,S.pk*.96);if(ps>.98)S.cl=pn;lit(S.mtr,S.pk);
+const m=ch[4],lg=dB((m.v.gain-.5)*50)*fad(m.v.fad)*fad(MV)*(near?1:.05)*dB((m.v.hi-.5)*15)*((m.mute||(ch.some(x=>x.solo)&&!m.solo))?0:1);
+if(lg>1){fbT+=dt;fb=Math.min(1,fb+dt*.5*lg)}else{fbT=0;fb=Math.max(0,fb-dt*2)}
+M.fg.gain.value=fbT>4?0:fb*.15;FB=lg>1&&fb>.1;
+if(now-tm>300){tm=now;status();mission();drawEQ()}}
+function status(){const pn=performance.now(),a=ch.filter(c=>!c.mute);let m;
+if(FB)m=['FEEDBACK! The mic hears the speaker and it loops. Turn the fader down, cut HIGH, or aim the mic away.','r'];
+else if(!cabOK())m=['A cable is wrong or unplugged. Tap Connect it.','y'];
+else if(pn-M.cl<800||pn-S.cl<800)m=['The main mix is clipping. Turn MAIN or the channel gains down.','r'];
+else if(ch.some(c=>pn-c.cl<800))m=['A channel is too hot (red). Turn its GAIN down.','r'];
+else if(a.length>2&&a.filter(c=>c.v.lo>.7).length>2)m=['Muddy mix: too much bass on many channels. Cut LOW.','y'];
+else if(a.length>2&&a.filter(c=>c.v.hi>.7).length>2)m=['Harsh mix: too much treble. Cut HIGH.','y'];
+else if(MV<.03||ch.every(c=>c.out.gain.value==0))m=['No sound. Check MUTE, SOLO, faders and MAIN.','y'];
+if(m){say(m[0],m[1]);flag=1}else if(flag){say('Sounding fine.','g');flag=0}}
+const MS=[{t:'The drums are too quiet. Turn DRUMS GAIN up until the meter is green and yellow, not red.',h:'Drag the top knob on DRUMS up slowly. Watch the meter.',s(){sv(0,'gain',.2)},ok:()=>{const p=nm(ch[0].pk);return p>.6&&p<.93}},
+{t:'Pan the KEYS to the left.',h:'Find PAN on KEYS. Drag it down to turn it left.',s(){},ok:()=>ch[2].v.pan<.3},
+{t:'Mute everything except the drums.',h:'Press MUTE on every channel except DRUMS.',s(){clr()},ok:()=>ch.every((c,i)=>i?c.mute:!c.mute)},
+{t:'This mix is muddy. Cut LOW on BASS, KEYS and VOCAL.',h:'Turn the LOW knob on those three channels down.',s(){clr();[1,2,3].forEach(i=>sv(i,'lo',.9))},ok:()=>[1,2,3].every(i=>ch[i].v.lo<.55)},
+{t:'The mic is squealing! Stop it without muting.',h:'Lower the MIC fader, cut its HIGH, or press AIM MIC to point it away.',s(){clr();sv(4,'fad',.9);sv(4,'gain',.6);near=1;aim()},ok:()=>!FB&&fb<.05&&!ch[4].mute&&ch[4].v.fad>.3},
+{t:'Cables! Connect MIC to CH5 IN, KEYS to CH3 IN, MAIN OUT to SPEAKERS, and SUB OUT to SUB.',h:'Tap the cable name, then tap where it goes. An input goes IN to the mixer. The mix goes OUT to the speakers.',s(){cab={};pend=null;applyCab();$('#cab').hidden=false;cabUI()},ok:()=>cabOK()}];
+function startM(){okc=0;const m=MS[mi];$('#mh').textContent='';if(!m){$('#mt').textContent='All missions done! Free play: try anything.';return}$('#mt').textContent=`Mission ${mi+1} of ${MS.length}: ${m.t}`;m.s()}
+function mission(){const m=MS[mi];if(!m||!C)return;if(m.ok()){if(++okc>=3){$('#mt').innerHTML='<span class="g">Nice work! You got it.</span>';okc=-99;setTimeout(()=>{mi++;startM()},1800)}}else if(okc>0)okc=0}
+$('#hb').onclick=()=>{if(MS[mi])$('#mh').textContent='Hint: '+MS[mi].h};$('#sk').onclick=()=>{if(MS[mi]){mi++;startM()}};
+$('#pl').onclick=()=>run^=1;
+$('#go').onclick=()=>{init();$('#ov').remove()};
+T.sel=['SELECT','Picks a channel. The screen shows its EQ curve.','You can see what your knobs really do.','Selecting does not change the sound.'];
+let fs,ms,sel=2,pend=null,cab={'MIC':'CH5 IN','KEYS':'CH3 IN','MAIN OUT':'SPEAKERS','SUB OUT':'SUB'};
+const RT={'MIC':'CH5 IN','KEYS':'CH3 IN','MAIN OUT':'SPEAKERS','SUB OUT':'SUB'},cabOK=()=>Object.keys(RT).every(k=>cab[k]==RT[k]);
+const OKM={'MIC':'Good! The mic goes into its own channel. Now set its gain.','KEYS':'Good! The keys are plugged into channel 3.','MAIN OUT':'Good! The mix now goes out to the normal speakers.','SUB OUT':'Good! The deep bass now goes to the sub speaker.'};
+const why=(s,d)=>s=='SUB OUT'?'SUB OUT feeds only the sub speaker. Plug it into SUB.':s=='MAIN OUT'&&d=='SUB'?'MAIN OUT is for the normal speakers. The sub has its own SUB OUT.':d=='SPEAKERS'||d=='HEADPHONES'?(s=='MAIN OUT'?'The headphone jack is only for headphones. Use SPEAKERS.':'An input must go IN to the mixer, not out to a speaker. No sound.'):(s=='MAIN OUT'?'MAIN OUT sends the mix to the speakers. Into an input it makes a loop.':'Wrong strip. The cable must match the channel, so it stays silent.');
+function applyCab(){if(!C)return;ch[4].in.gain.value=cab.MIC==RT.MIC?1:0;ch[2].in.gain.value=cab.KEYS==RT.KEYS?1:0;M.sf.gain.value=cab['MAIN OUT']==RT['MAIN OUT']?.4:0;S.sf.gain.value=cab['SUB OUT']==RT['SUB OUT']?.5:0;cabUI()}
+function cabUI(m){$('#cs').innerHTML=Object.keys(RT).map(k=>`<button data-s="${k}" class="${pend==k?'on':''}">${k}</button>`).join('');$('#ct').innerHTML=['CH3 IN','CH5 IN','SPEAKERS','SUB','HEADPHONES'].map(t=>`<button data-d="${t}">${t}</button>`).join('');
+$('#cl').innerHTML=Object.keys(RT).map(k=>`<div class="${cab[k]==RT[k]?'g':'y'}">${k} ➜ ${cab[k]||'not plugged in'} ${cab[k]==RT[k]?'✔':'✘'}</div>`).join('')+(m?`<div>${m}</div>`:'')}
+$('#cab').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id=='cu'){cab={};pend=null;applyCab();return cabUI('All unplugged. Silence! Plug them back in.')}
+if(b.id=='cf'){cab={...RT};applyCab();return cabUI('This is the right setup.')}
+if(b.dataset.s){pend=b.dataset.s;return cabUI('Now tap where '+pend+' goes.')}
+if(b.dataset.d&&pend){const s=pend,d=b.dataset.d;cab[s]=d;pend=null;applyCab();cabUI(d==RT[s]?OKM[s]:why(s,d))}};
+$('#cb').onclick=()=>{$('#cab').hidden=!$('#cab').hidden;cabUI()};
+$('#ld').onclick=()=>{if(!C)return say('Press Start first.','y');$('#fi').click()};
+$('#fi').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const b=await C.decodeAudioData(await f.arrayBuffer());if(fs)fs.stop();fs=C.createBufferSource();fs.buffer=b;fs.loop=true;const g=C.createGain();g.gain.value=.3;fs.connect(g).connect(ch[5].in);fs.start();say('Your audio is on channel 6 (FILE). Mix it!','g')}catch(x){say('Could not read that file. Try an MP3 or WAV.','y')}};
+$('#rm').onclick=async()=>{if(!C)return say('Press Start first.','y');if(ms){ms.getTracks().forEach(t=>t.stop());ms=null;return say('Real mic off.','g')}try{ms=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false}});C.createMediaStreamSource(ms).connect(ch[4].in);say('Real mic is on channel 5. Use headphones! With speakers it will really squeal.','y')}catch(x){say('Mic not allowed. Check your browser settings.','y')}};
+function drawEQ(){const cv=$('#eq'),g=cv.getContext('2d'),v=ch[sel].v,W=300,H=70,sg=x=>1/(1+Math.exp(-x));g.clearRect(0,0,W,H);g.strokeStyle='#334';g.lineWidth=1;g.beginPath();g.moveTo(0,H/2);g.lineTo(W,H/2);g.stroke();g.strokeStyle='#38bdf8';g.lineWidth=2;g.beginPath();
+for(let x=0;x<=W;x+=2){const L=1.3+x/W*3,a=(v.lo-.5)*30*(1-sg((L-2.4)/.2))+(v.mid-.5)*30*Math.exp(-(((L-3.18)/.35)**2))+(v.hi-.5)*30*sg((L-3.6)/.2),y=H/2-a*H/34;x?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();
+$('#sel').textContent=`CH ${sel+1} ${N[sel]} · EQ curve`;ch.forEach((c,i)=>c.se.classList.toggle('on',i==sel))}
+drawEQ();
+const S={pk:0,cl:0};let SV=.75;
+R.sub=['SUB is low. Thin sound, little deep bass.|y','SUB level is good. Full, deep low end.|g','SUB is high. Boomy and rumbling!|y'];
+T.main=['MAIN (TOPS)','Sets the volume of the normal speakers. They play the mids and highs.','Clear voices and instruments.','Too high = the whole mix clips. A loud mic here can start feedback.'];
+T.sub=['SUB','Sets the volume of the sub speaker. It plays only the deep bass (below about 100 Hz).','Kick and bass feel big and powerful.','Too high = boomy and muddy, and it shakes the room. Too low = thin sound.'];
+$('#MS .tab').innerHTML='MAIN<br>TOPS';
+const ss=document.createElement('div');ss.className='st';ss.id='SS';ss.innerHTML=`<div class="tab" style="background:#c07cf2">SUB<br>OUT</div><div style="height:249px"></div><div class="mf"><div class="mtr">${MT}</div><div class="fd" data-t="sub"><div class="cap"></div></div></div><div style="height:22px"></div>`;$('#MS').after(ss);S.mtr=ss.querySelector('.mtr');
+mkFader(ss.querySelector('.fd'),()=>SV,v=>{SV=v;if(C)S.g.gain.value=fad(v);react('sub',v)});
+startM();
+</script></body></html>
